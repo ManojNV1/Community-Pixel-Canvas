@@ -1,0 +1,27 @@
+name: Pixel Canvas Updater
+on:
+  push:
+
+jobs:
+  draw:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: pip install pillow numpy
+
+      - name: Update Canvas
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: python pixel_parser.py
+
+      - name: Commit Artwork
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update community canvas"
